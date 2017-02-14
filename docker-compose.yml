@@ -1,17 +1,22 @@
 version: "3"
 services:
   php:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.php
     volumes:
-      - ./html:/var/www/html
+      - ./html/modules/custom:/var/www/html/modules/custom
+      - files:/var/www/html/sites/default/files
   web:
-    image: nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
     links:
       - php
     ports:
       - "8888:80"
     volumes:
-      - php:/var/www/html
       - ./default.conf:/etc/nginx/conf.d/default.conf
+      - files:/var/www/html/sites/default/files
 volumes:
-  php:
+  files:
